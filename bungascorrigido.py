@@ -1,8 +1,8 @@
 import random
-from random import sample
+
 def geras_carte(mod):
+    carte = []
     if mod == "rapido":
-        carte = []
         for x in range(2):
             linha = []
             for x in range(3):
@@ -11,35 +11,38 @@ def geras_carte(mod):
                 elif x == 1:
                     linha.append(random.randint(11, 20))
                 else:
-                    linha.append(random.randint(21, 30))                
+                    linha.append(random.randint(21, 30)) 
+            carte.append(linha)
     elif mod == "demorado":
-            carte = []
+        for x in range(3):
+            linha = []
             for x in range(3):
-                linha = []
-                for x in range(3):
-                    if x == 0:
-                        linha.append(random.randint(1, 10))
-                    elif x == 1:
-                        linha.append(random.randint(11, 20))
-                    else:
-                        linha.append(random.randint(21, 30))   
+                if x == 0:
+                    linha.append(random.randint(1, 10))
+                elif x == 1:
+                    linha.append(random.randint(11, 20))
+                else:
+                    linha.append(random.randint(21, 30))   
+            carte.append(linha)
 
+    return carte  # Retornar a cartela gerada
 
 def carte_ex(carte, play, sort):
-   for z, cartela in enumerate(carte):
-       print(f"Cartela do jogador{play[z]}")
-       for linha in cartela:
-           linha_mark = []
-           for num in linha:
-               if num in sort:
-                   linha_mark.append(f" ({num:2})")
-               else:
-                   linha_mark.append(f" {num:2}")
-       print(" ".join(linha_mark))
-   return carte
+    for z, cartela in enumerate(carte):  # Mudando 'carte' para 'cartela'
+        print(f"Cartela do jogador {play[z]}")
+        for linha in cartela:  # Agora 'cartela' é a cartela do jogador
+            linha_mark = []
+            for num in linha:
+                if num in sort:
+                    linha_mark.append(f" ({num:2})")
+                else:
+                    linha_mark.append(f" {num:2}")
+        print(" ".join(linha_mark))
+
 def carte_state(carte, play, sort):
     print(f"Dezenas sorteadas: {' '.join(map(str, sorted(sort)))}")
-    carte_ex(carte, play, sort)
+    
+
 def bingus():
     modo = str(input("Selecione o modo de jogo(rapido/demorado): "))
     while modo not in ["rapido", "demorado"]:
@@ -48,7 +51,7 @@ def bingus():
     carte = []
     
     carte_n = 2 if modo == "rapido" else 4
-    for x in range (carte_n):
+    for x in range(carte_n):
         nome = input(f"Nome do jogador {x + 1}: ")
         play.append(nome)
         carte.append(geras_carte(modo))
@@ -61,32 +64,27 @@ def bingus():
             dezena = random.randint(1, 40)
         sort.append(dezena)
         carte_ex(carte, play, sort)
-        for y, carte in enumerate(carte):
+        carte_state
+        for y, cartela in enumerate(carte):
             if y in cartelas_fechadas:
                 continue
             cartela_fechada = True
-            for col in carte:
-                for num in col:
-                    cartela_fechada = False
-                    break
+            for linha in cartela:
+                for num in linha:
+                    if num not in sort:
+                        cartela_fechada = False
+                        break
                 if not cartela_fechada:
                     break
             if cartela_fechada:
                 cartelas_fechadas.add(y)
-                print(f"jogador {play[y]} fechou a cartela!!")
+                print(f"Jogador {play[y]} fechou a cartela!!")
         if len(cartelas_fechadas) == carte_n:
             game_end = True
         input("Precione a tecla Enter para sortear a próxima dezena")
     print("A partida acabou!")
     print("Vencedores:")
     for x in cartelas_fechadas:
-        print(f"jogador{play[x]}")
+        print(f"Jogador {play[x]}") 
 
 bingus()
-    
-        
-#while not jogo_terminado:
-#    dezena = random.randint(1, 40)
-#    while dezena in sorteados:
-#        dezena = random.randint(1, 40)
-#    sorteados.append(dezena)
