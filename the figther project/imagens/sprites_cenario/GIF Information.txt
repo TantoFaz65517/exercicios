@@ -1,0 +1,9 @@
+Duração de cada frame do GIF em milissegundos:
+Frame 1 : 12
+Frame 2 : 12
+Frame 3 : 12
+Frame 4 : 12
+Frame 5 : 12
+Frame 6 : 12
+Frame 7 : 12
+Frame 8 : 12
