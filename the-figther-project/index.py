@@ -8,15 +8,15 @@ pygame.display.set_caption("fighter project")
 
 clock = pygame.time.Clock()
 
-img_fundo = pygame.image.load("C:/Users/manoc/Desktop/imagens/cenarios_acriativos-45(2).gif")
+img_fundo = pygame.image.load("C:/Users/20231011110027/Desktop/exercicios/the-figther-project/imagens/cenarios_acriativo.gif")
 
 todas_as_sprites = pygame.sprite.Group()
 
-cenario = sprites.cenario_sprite
+cenario = sprites.cenario_sprite()
 
 todas_as_sprites.add(cenario)
 #player 1 assets
-img_player_1 = pygame.image.load("C:/Users/manoc/Desktop/imagens/personagem2.png")
+img_player_1 = pygame.image.load("C:/Users/20231011110027/Desktop/exercicios/the-figher-project/imagens/personagem2.png")
 pos_y_player_1 = 95
 pos_x_player_1 = 150
 vel_mov = 20
