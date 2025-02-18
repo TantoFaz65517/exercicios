@@ -1,0 +1,23 @@
+body{
+    background-color: whitesmoke; 
+    font-size: 1em; /* TAMANHO DA FONTE*/
+    font-family: Arial, helvetica, sans-serif;
+   
+}
+h1{
+    background-color: teal;
+    padding: 2em; /*padding = espaçamento dentro da caixa*/
+    text-align: center;
+}
+li{
+    display: inline;
+    background-color: teal;
+    padding: 1em;
+}
+ol{
+    padding: 0;
+}
+a{
+    color: wheat;
+    text-decoration: none;
+}

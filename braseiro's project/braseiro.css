@@ -94,29 +94,28 @@ body {
 }
 
 .circle {
-    width: 400px;
-    height: 400px;
-    background-color: #6b6b6b;
+   
     border-radius: 50%;
     position: absolute;
     opacity: 0.7;
+    
 }
 
 .circle:first-child {
-    top: 30%;
-    left: 15%;
+    top: 25%;
+    left: -10%;
 }
 
 .circle:last-child {
-    bottom: 20%;
-    right: 10%;
+    bottom: 25%;
+    right: -10%;
 }
 
 /* Rodapé */
 .footer {
     display: flex;
     justify-content: space-between;
-    padding: 20px;
+    padding: 60px;
     background-color: #4b0f0f;
     color: #fff;
     font-size: 16px;

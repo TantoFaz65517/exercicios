@@ -1,0 +1,16 @@
+body{
+    text-align: center;
+}
+li{
+    display: inline;
+    /*o display inline permitira que um elemento fique ao lado um do outro*/
+    list-style-type: none;
+    /**/
+}
+img{
+    width: 7em;
+}
+a:hover{
+    box-shadow: 1em 1em 0.5em #ddd;
+    display: inline-block;
+}/*hover; é uma subclasse que altera o comportamento quando o mouse passa por cima.*/

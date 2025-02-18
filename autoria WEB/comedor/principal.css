@@ -1,0 +1,12 @@
+body{
+    background-color: rgb(54, 33, 0);
+    color:rgb(218, 45, 45);
+    font-size: 4em;
+    font-family:Arial, Helvetica, sans-serif;
+    text-align: center;
+}
+h1{
+    text-shadow: 6px 10px 12px black;
+    border: 5px solid rgb(155, 139, 97);
+    border-radius: 60px;
+}

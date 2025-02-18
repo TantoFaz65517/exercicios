@@ -1,0 +1,14 @@
+table{
+    border-collapse: collapse;
+    width: 50%;
+    margin: 0 auto ;
+    /* o margin: 0 auto; define largura a largura automatica para esquerda e direita(não funciona quando o objeto não tem largura) */
+}
+tr, td{
+    /* este seletor define o visual das duas tags( mais de um elemento com vírgula*/
+    padding: 1em;
+    border: 1px solid darkblue;
+}
+tr:nth-child(odd){
+    background-color: rgb(255, 255, 255);
+}

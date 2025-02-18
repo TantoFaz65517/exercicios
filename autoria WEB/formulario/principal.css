@@ -1,0 +1,74 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+input:focus{
+    border: 2px solid goldenrod;
+    outline: none;
+}
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #5A8B7C;
+    
+}
+header{
+    text-align: center;
+    background-color: #21332E;
+    padding: 2.5%;
+    color: aliceblue;   
+}
+main{
+    background-color: #4E615B;
+    margin-top: 5em;
+    margin-left: 30%;
+    margin-right: 30%;
+    border-radius: 11px;
+}
+legend{
+    font-weight: bold;
+}
+form{
+    margin: 2em;
+    color: aliceblue;
+    border-radius: 8;
+    padding-top: 15px;
+    padding-bottom:15px;
+}
+fieldset{
+    background-color: #1D3830;
+    border-radius: 11px;
+    border: none;
+    padding: 2em;
+    text-align: center;
+}
+
+select{
+    margin-right: 10em;
+    padding: 0.5em;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    border-radius: 11px;
+}
+button{
+    margin-top: 4em;
+    margin-bottom: 1em;
+    background-color: #57B699;
+    color: aliceblue;
+    font-weight: bold;
+    border: whitesmoke;
+    padding: 10px;
+    border-radius: 6px;
+    margin-left: 30em;
+}
+
+input{
+    width: 95%;
+    padding: 0.5em;
+    border-radius: 11px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+footer{
+    text-align: center;
+    color: aliceblue;}

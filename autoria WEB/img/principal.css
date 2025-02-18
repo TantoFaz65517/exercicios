@@ -1,0 +1,16 @@
+body{
+    background-color: darkred;
+    color: azure;
+    font-size: 10px;
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+}
+h1{
+    border:2px solid white;
+    margin: 30px 40em;
+    border-radius: 70px;
+}
+h2{
+    text-shadow: 6px 10px 12px black;
+
+}
