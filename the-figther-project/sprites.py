@@ -3,7 +3,7 @@ import pygame
 class cenario_sprite(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
-        path = "C:/Users/manoc/Desktop/exercicios/the-figther-project/imagens/sprites_cenario"
+        path = "C:/Users/20231011110027/Desktop/exercicios/the-figther-project/imagens/sprites_cenario"
         self.cenario = []
         self.cenario.append(pygame.image.load(path + "/frame-1.png"))
         self.cenario.append(pygame.image.load(path + "/frame-2.png"))
@@ -17,22 +17,30 @@ class cenario_sprite(pygame.sprite.Sprite):
         self.image = self.cenario[self.atual]
         self.rect = self.image.get_rect()
         self.rect.topleft = (0, 0)  # Corrigido para atribuição correta
-
+        self.tique = 1
     def update(self):
-        # Atualiza a animação do fundo
-        self.atual += 1
-        if self.atual >= len(self.cenario):
-            self.atual = 0  # Reinicia a animação
-        self.image = self.cenario[self.atual]
+        print("update 1")
+        if self.tique == 3:
+            print("update 2")
+        #if True:
+            # Atualiza a animação do fundo
+            self.tique = 0
+            self.atual += 1
+            if self.atual >= len(self.cenario):
+                self.atual = 0  # Reinicia a animação
+            self.image = self.cenario[self.atual]
+        self.tique += 1
 
 class personagem():
     def __init__(self, x, y):
+        self.virar = False
         self.rect = pygame.Rect((x, y, 80, 180))
         self.vel_y = 0
         self.pulo = False
         self.atacando = False
         self.ataque = 0
         self.tempo_ultimo_ataque = 0
+        self.vida = 100
         
     def move(self, largura_tela, altura_tela, surface, alvo):
         VEL = 10
@@ -59,6 +67,7 @@ class personagem():
             #ataques
             if key[pygame.K_h] or key[pygame.K_j] or key[pygame.K_k]:
                 self.ataq(surface, alvo)
+                
                 #qual tipo de ataque
                 if key[pygame.K_h]:
                     self.ataque = 1
@@ -82,14 +91,21 @@ class personagem():
             self.vel_y = 0
             self.pulo = False
             pos_y_Player = altura_tela - 408 - self.rect.bottom
+
+        # virar jogadores
+        if alvo.rect.centerx > self.rect.centerx:
+            self.virar = False
+        else:
+            self.virar = True
         #atualização de posição
         self.rect.x += pos_x_Player
         self.rect.y += pos_y_Player
         
     def ataq(self, surface, alvo):
-        self.atacando == True
-        atacando_rect = pygame.Rect(self.rect.centerx, self.rect.y, 2 * self.rect.width, self.rect.height)
+        self.atacando = True
+        atacando_rect = pygame.Rect(self.rect.centerx - (2 * self.rect.width * self.virar), self.rect.y, 2 * self.rect.width, self.rect.height)
         if atacando_rect.colliderect(alvo.rect):
+            alvo.vida -= 10
             print("acerto")
         pygame.draw.rect(surface, (0, 255, 0), atacando_rect)
     
