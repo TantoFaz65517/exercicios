@@ -1,59 +1,45 @@
 import pygame
-import sprites
+from sprites import cenario_sprite
+from sprites import personagem
 
+# Inicializa o Pygame
+pygame.init()
 
+# Configurações da janela
 janela = pygame.display.set_mode([768, 384])
-
-pygame.display.set_caption("fighter project")
-
+pygame.display.set_caption("Fighter Project")
 clock = pygame.time.Clock()
 
-img_fundo = pygame.image.load("C:/Users/20231011110027/Documents/exercicios/the-figther-project/imagens/cenarios_acriativos-42.gif")
-
+# Grupo de sprites
 todas_as_sprites = pygame.sprite.Group()
 
-cenario = sprites.cenario_sprite()
-
+# Adiciona o sprite de cenário ao grupo
+cenario = cenario_sprite()
 todas_as_sprites.add(cenario)
-#player 1 assets
-img_player_1 = pygame.image.load("C:/Users/20231011110027/Documents/exercicios/the-figther-project/imagens/personagem2.png")
-pos_y_player_1 = 95
-pos_x_player_1 = 150
-vel_mov = 20
-loop = True
 
+# Player 1
+player_1 = personagem(250, 250)
+todas_as_sprites.add(player_1)
+
+# Loop do jogo
+loop = True
 while loop:
+    # Captura eventos
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             loop = False
-    
-    teclas = pygame.key.get_pressed()
-#movimentação do jogador 
-    if teclas[pygame.K_UP]:
-        pos_y_player_1 -= vel_mov
-        
-    if teclas[pygame.K_DOWN]:
-        pos_y_player_1 += vel_mov
-        
-    if teclas[pygame.K_RIGHT]:
-        pos_x_player_1 += vel_mov
-        
-    if teclas[pygame.K_LEFT]:
-        pos_x_player_1 -= vel_mov
-#barreira do cenário        
-    if pos_x_player_1 <= 0:
-        pos_x_player_1 = 0
-    elif pos_x_player_1 >= 610:
-        pos_x_player_1 = 610
-        
-    if pos_y_player_1 <= 0:
-        pos_y_player_1 = 0
-    elif pos_y_player_1 >= 135:
-        pos_y_player_1 = 135
-    print(pos_x_player_1, pos_y_player_1)
- #   janela.blit(img_fundo, (0,0))
-#    janela.blit(img_player_1, (pos_x_player_1, pos_y_player_1))
-    todas_as_sprites.draw(janela)
+
+    # Atualiza sprites
     todas_as_sprites.update()
+
+    # Limpa a tela antes de redesenhar
+    janela.fill((0, 0, 0))
+
+    # Desenha todos os sprites na tela
+    todas_as_sprites.draw(janela)
+
+    # Atualiza a tela
     pygame.display.flip()
-    clock.tick(60)
+    clock.tick(24)  # Limita a taxa de FPS a 24
+
+pygame.quit()
