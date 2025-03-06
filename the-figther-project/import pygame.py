@@ -20,6 +20,12 @@ amarelo = (255, 255, 0)
 # Fundo do jogo
 janela.fill("black")
 
+#carregar lista de sprites
+samurai_1 = pygame.image.load("the-figther-project/imagens/sprites_player/samurai-1.png").convert_alpha()
+samurai_2 = pygame.image.load("the-figther-project/imagens/sprites_player/samurai-2.png").convert_alpha()
+
+#numero de frames em cada ação
+
 # Grupo de sprites
 todas_as_sprites = pygame.sprite.Group()
 
