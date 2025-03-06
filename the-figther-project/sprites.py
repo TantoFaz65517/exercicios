@@ -32,8 +32,10 @@ class cenario_sprite(pygame.sprite.Sprite):
         self.tique += 1
 
 class personagem():
-    def __init__(self, x, y):
+    def __init__(self, x, y, data, lista_sprites, animacao):
+        self.tamanho = data[0]
         self.virar = False
+        self.lista_animacao = self.personagem_sprite(lista_sprites, animacao)
         self.rect = pygame.Rect((x, y, 80, 180))
         self.vel_y = 0
         self.pulo = False
@@ -42,6 +44,16 @@ class personagem():
         self.tempo_ultimo_ataque = 0
         self.vida = 100
         
+    def personagem_sprite(self,lista_sprites,animacao):
+        #tirar sprites da lista
+        lista_animacao = []
+        for y, animacao in enumerate(lista_sprites):
+            temp_list_img = []
+            for x in range(animacao):
+                temp_img = lista_sprites.subsurface(x * self.size, y * self.size, self.size, self.size)
+                temp_list_img.append(temp_img)
+            lista_animacao.append(temp_list_img)
+        return lista_animacao
     def move(self, largura_tela, altura_tela, surface, alvo):
         VEL = 10
         pos_x_Player = 0

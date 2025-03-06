@@ -17,6 +17,11 @@ clock = pygame.time.Clock()
 vermelho = (255, 0, 0)
 azul = (0, 0, 255)
 amarelo = (255, 255, 0)
+#variavel player
+tamanho_player_1 = 201
+player_1_data = [tamanho_player_1]
+tamanho_player_2 = 201
+player_2_data = [tamanho_player_2]
 # Fundo do jogo
 janela.fill("black")
 
@@ -26,6 +31,8 @@ samurai_2 = pygame.image.load("the-figther-project/imagens/sprites_player/samura
 
 #numero de frames em cada ação
 
+samurai_1_frames = [4, 5, 4, 9, 8, 6]
+samurai_2_frames = [4, 3, 6, 6, 12, 8]
 # Grupo de sprites
 todas_as_sprites = pygame.sprite.Group()
 
@@ -39,8 +46,8 @@ def draw_barra_vida(vida, x, y):
     pygame.draw.rect(janela, azul, (x, y, 300, 30))
     pygame.draw.rect(janela, vermelho, (x, y ,300 * ratio, 30))
 #jogador 1 e 2
-jogador_1 = personagem(120, 180)
-jogador_2 = personagem(320, 180)
+jogador_1 = personagem(120, 180, player_1_data, samurai_1, samurai_1_frames)
+jogador_2 = personagem(320, 180, player_2_data, samurai_2, samurai_2_frames)
 
 # Loop do jogo
 loop = True
