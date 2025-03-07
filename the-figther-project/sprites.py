@@ -36,6 +36,10 @@ class personagem():
         self.tamanho = data[0]
         self.virar = False
         self.lista_animacao = self.personagem_sprite(lista_sprites, animacao)
+        self.acao = 0 # 1:parado 2:corre 3: pulo 4: ataque1 4: ataque2 5:acerto 6: morte
+        self.frame_index = 0
+       
+        self.image = self.lista_animacao[self.acao][self.frame_index]
         self.rect = pygame.Rect((x, y, 80, 180))
         self.vel_y = 0
         self.pulo = False
@@ -47,13 +51,15 @@ class personagem():
     def personagem_sprite(self,lista_sprites,animacao):
         #tirar sprites da lista
         lista_animacao = []
-        for y, animacao in enumerate(lista_sprites):
+        for y, q in enumerate(animacao):
             temp_list_img = []
-            for x in range(animacao):
-                temp_img = lista_sprites.subsurface(x * self.size, y * self.size, self.size, self.size)
+            for x in range(q):
+                temp_img = lista_sprites.subsurface(x * self.tamanho, y * self.tamanho, self.tamanho, self.tamanho)
                 temp_list_img.append(temp_img)
             lista_animacao.append(temp_list_img)
+        print(lista_animacao)
         return lista_animacao
+    
     def move(self, largura_tela, altura_tela, surface, alvo):
         VEL = 10
         pos_x_Player = 0
@@ -123,3 +129,4 @@ class personagem():
     
     def desenhar(self, surface):
         pygame.draw.rect(surface, (255, 0, 0), self.rect)
+        surface.blit(self.image, (self.rect.x, self.rect_y))
