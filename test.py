@@ -1,110 +1,203 @@
 import pygame
 
-# Inicializa o Pygame
-pygame.init()
+class cenario_sprite(pygame.sprite.Sprite):
+    def __init__(self):
+        pygame.sprite.Sprite.__init__(self)
+        path = "the-figther-project/imagens/sprites_cenario"
+        self.cenario = []
+        self.cenario.append(pygame.image.load(path + "/frame-1.png"))
+        self.cenario.append(pygame.image.load(path + "/frame-2.png"))
+        self.cenario.append(pygame.image.load(path + "/frame-3.png"))
+        self.cenario.append(pygame.image.load(path + "/frame-4.png"))
+        self.cenario.append(pygame.image.load(path + "/frame-5.png"))
+        self.cenario.append(pygame.image.load(path + "/frame-6.png"))
+        self.cenario.append(pygame.image.load(path + "/frame-7.png"))
+        self.cenario.append(pygame.image.load(path + "/frame-8.png"))
+        self.atual = 0
+        self.image = self.cenario[self.atual]
+        self.rect = self.image.get_rect()
+        self.rect.topleft = (0, 0)  # Corrigido para atribuição correta
+        self.tique = 1
+    def update(self):
+        print("update 1")
+        if self.tique == 3:
+            print("update 2")
+        #if True:
+            # Atualiza a animação do fundo
+            self.tique = 0
+            self.atual += 1
+            if self.atual >= len(self.cenario):
+                self.atual = 0  # Reinicia a animação
+            self.image = self.cenario[self.atual]
+        self.tique += 1
 
-# Configurações da tela
-LARGURA, ALTURA = 800, 400
-TELA = pygame.display.set_mode((LARGURA, ALTURA))
-pygame.display.set_caption("Jogo de Luta")
-
-# Cores
-BRANCO = (255, 255, 255)
-VERMELHO = (255, 0, 0)
-AZUL = (0, 0, 255)
-VERDE = (0, 255, 0)
-PRETO = (0, 0, 0)
-
-# Clock para controlar FPS
-clock = pygame.time.Clock()
-
-# Classe para os jogadores
-class Lutador(pygame.sprite.Sprite):
-    def __init__(self, x, y, cor):
-        super().__init__()
-        self.image = pygame.Surface((50, 80))
-        self.image.fill(cor)
-        self.rect = self.image.get_rect(topleft=(x, y))
+class personagem():
+    def __init__(self, x, y, virar, data, lista_sprites, animacao):
+        self.tamanho = data[0]
+        self.escala_image = data[1]
+        self.offset = data[2]
+        self.virar = virar
+        self.lista_animacao = self.personagem_sprite(lista_sprites, animacao)
+        self.acao = 0 # 0:parado 1:andar 2: correr 3: pular 4:morrer 5: ataque1 6: ataque2 7: ataque3 8: dano 9: defesa
+        self.frame_index = 0
+        self.image = self.lista_animacao[self.acao][self.frame_index]
+        self.update_time = pygame.time.get_ticks()
+        self.rect = pygame.Rect((x, y, 40, 120))
         self.vel_y = 0
-        self.no_chao = True
-        self.vida = 100
+        self.correr = False
+        self.pulo = False
+        self.atacando = False
+        self.ataque = 0
+        self.tempo_ultimo_ataque = 0
+        self.acerto = False
+        self.vida = 10
+        self.vivo = True
         
-
-    def mover(self, teclas, esquerda, direita, pulo):
-        velocidade = 5
+    def personagem_sprite(self,lista_sprites,animacao):
+        #tirar sprites da lista
+        lista_animacao = []
+        for y, q in enumerate(animacao):
+            temp_list_img = []
+            for x in range(q):
+                temp_img = lista_sprites.subsurface(x * self.tamanho, y * self.tamanho, self.tamanho, self.tamanho)
+                
+                temp_list_img.append(pygame.transform.scale(temp_img, (self.tamanho * self.escala_image, self.tamanho * self.escala_image)))
+            lista_animacao.append(temp_list_img)
+        return lista_animacao
+    
+    def move(self, largura_tela, altura_tela, surface, alvo):
+        VEL = 10
+        pos_x_Player = 0
+        pos_y_Player = 0
         gravidade = 2
+        self.correr = False
+        #self.ataque = 0
+        
+    #get inputs
+        key = pygame.key.get_pressed()
+        
+        #só acontece se não estiver atacando, sendo atacado ou defendendo
+        if self.atacando == False:
+            #movimentação
+            if key[pygame.K_a]:
+                pos_x_Player = -VEL
+                self.correr = True
+            if key[pygame.K_d]:
+                pos_x_Player = VEL
+                self.correr = True
+                
+            #pulo
+            if key[pygame.K_w] and self.pulo == False:
+                self.vel_y = -30
+                self.pulo = True
+                
+            #ataques
+            if key[pygame.K_h] or key[pygame.K_j] or key[pygame.K_k]:
+                self.ataq(surface, alvo)
+                
+                #qual tipo de ataque
+                if key[pygame.K_h]:
+                    self.ataque = 1
+                if key[pygame.K_j]:
+                    self.ataque = 2
+                if key[pygame.K_k]:
+                    self.ataque = 3
+        
+        #gravidade
+        self.vel_y += gravidade    
+        pos_y_Player += self.vel_y
+            
+        
+            #limite de tela
+        if self.rect.left + pos_x_Player < 0:
+            pos_x_Player = -self.rect.left
+        if self.rect.right +pos_x_Player > largura_tela:
+            pos_x_Player = largura_tela - self.rect.right
+            #limite do pulo
+        if self.rect.bottom + pos_y_Player  > altura_tela - 408:
+            self.vel_y = 0
+            self.pulo = False
+            pos_y_Player = altura_tela - 408 - self.rect.bottom
 
-        # Movimentação horizontal
-        if teclas[esquerda]:
-            self.rect.x -= velocidade
-        if teclas[direita]:
-            self.rect.x += velocidade
+        # virar jogadores
+        if alvo.rect.centerx > self.rect.centerx:
+            self.virar = False
+        else:
+            self.virar = True
+        #atualização de posição
+        self.rect.x += pos_x_Player
+        self.rect.y += pos_y_Player
 
-        # Pulo
-        if teclas[pulo] and self.no_chao:
-            self.vel_y = -30
-            self.no_chao = False
+        #cooldown ataque
+        if self.tempo_ultimo_ataque > 0:
+            self.tempo_ultimo_ataque -= 5
+        
+    def update(self):
+    # Definir cooldown de animação
+        if self.acao == 6:  # Se for ataque 2
+            animacao_cooldown = 40  # Reduzindo o tempo (mais rápido)
+        else:
+            animacao_cooldown = 120  # Tempo normal
 
-        # Aplicar gravidade
-        self.vel_y += gravidade
-        self.rect.y += self.vel_y
+        # Checar qual animação fazer
+        if self.vida <= 0:
+            self.vida = 0
+            self.vivo = False
+            self.update_acao(4) #4 morrer
+        elif self.acerto == True:
+            self.update_acao(8) # dano acerto
+        elif self.atacando:
+            if self.ataque == 1:
+                self.update_acao(5)  # Ataque 1
+            elif self.ataque == 2:
+                self.update_acao(6)  # Ataque 2 (mais rápido agora)
+            else:
+                self.update_acao(7)  # Ataque 3
+        elif self.pulo:
+            self.update_acao(3)  # Pular
+        elif self.correr:
+            self.update_acao(2)  # Correr
+        else:
+            self.update_acao(0)  # Parado
 
-        # Limitar o chão
-        if self.rect.y >= ALTURA - 80:
-            self.rect.y = ALTURA - 80
-            self.no_chao = True
-
-    def atacar(self, outro_jogador, tecla_ataque, teclas):
-        if teclas[tecla_ataque] and pygame.time.get_ticks() - self.tempo_ultimo_ataque > 500:
-            ataque_rect = pygame.Rect(self.rect.x - 20, self.rect.y, self.rect.width + 40, self.rect.height)
-            pygame.draw.rect(TELA, VERDE, ataque_rect, 2)  # Desenha a área de ataque
-            if ataque_rect.colliderect(outro_jogador.rect):
-                outro_jogador.vida -= 10
-
-# Criando os jogadores
-player1 = Lutador(150, ALTURA - 80, VERMELHO)
-player2 = Lutador(600, ALTURA - 80, AZUL)
-
-# Loop do jogo
-rodando = True
-while rodando:
-    clock.tick(30)  # FPS do jogo
-
-    # Verifica eventos
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            rodando = False
-
-    # Captura as teclas pressionadas
-    teclas = pygame.key.get_pressed()
-
-    # Movimentação dos jogadores
-    player1.mover(teclas, pygame.K_a, pygame.K_d, pygame.K_w)
-    player2.mover(teclas, pygame.K_LEFT, pygame.K_RIGHT, pygame.K_UP)
-
-    # Ataque
-    player1.atacar(player2, pygame.K_f, teclas)
-    player2.atacar(player1, pygame.K_l, teclas)
-
-    # Atualiza a tela
-    TELA.fill(PRETO)
-
-    # Desenha os jogadores
-    TELA.blit(player1.image, player1.rect)
-    TELA.blit(player2.image, player2.rect)
-
-    # Desenha barras de vida
-    pygame.draw.rect(TELA, VERMELHO, (50, 20, player1.vida * 2, 10))
-    pygame.draw.rect(TELA, AZUL, (LARGURA - 250, 20, player2.vida * 2, 10))
-
-    # Verifica se alguém venceu
-    if player1.vida <= 0:
-        print("Player 2 Venceu!")
-        rodando = False
-    if player2.vida <= 0:
-        print("Player 1 Venceu!")
-        rodando = False
-
-    pygame.display.flip()
-
-pygame.quit()
+        # Atualizar animação
+        self.image = self.lista_animacao[self.acao][self.frame_index]
+        if pygame.time.get_ticks() - self.update_time > animacao_cooldown:
+            self.frame_index += 1
+            self.update_time = pygame.time.get_ticks()
+            # Resetar loop
+            if self.frame_index >= len(self.lista_animacao[self.acao]):
+                #checar se o player esta morto e encerrar anima
+                if self.vivo == False:
+                    self.frame_index = len(self.lista_animacao[self.acao]) - 1
+                else:
+                    self.frame_index = 0
+                    if self.acao in [5, 6, 7]:  # Se o ataque terminou
+                        self.atacando = False
+                        self.tempo_ultimo_ataque = 50
+                    #verificar se levou dano
+                    if self.acao == 8:
+                        self.acerto = False
+                        self.atacando = False
+                        self.tempo_ultimo_ataque = 50
+                    
+    def ataq(self, surface, alvo):
+        if self.tempo_ultimo_ataque == 0:
+            self.atacando = True
+            atacando_rect = pygame.Rect(self.rect.centerx - (2 * self.rect.width * self.virar), self.rect.y, 2 * self.rect.width, self.rect.height)
+            if atacando_rect.colliderect(alvo.rect):
+                alvo.vida -= 10
+                alvo.acerto  = True
+                print("acerto")
+            pygame.draw.rect(surface, (0, 255, 0), atacando_rect)
+    
+    def update_acao(self, nova_acao):
+        #checar numero de sprites em cada animacao
+        if nova_acao != self.acao:
+            self.acao = nova_acao
+            self.frame_index = 0
+            self.update_time = pygame.time.get_ticks()
+    def desenhar(self, surface):
+        img = pygame.transform.flip(self.image, self.virar, False)
+        pygame.draw.rect(surface, (255, 0, 0), self.rect)
+        surface.blit(img, (self.rect.x - (self.offset[0] * self.escala_image), self.rect.y - (self.offset[1] * self.escala_image)))
