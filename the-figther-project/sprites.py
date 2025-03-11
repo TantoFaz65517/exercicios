@@ -1,5 +1,4 @@
 import pygame
-
 class cenario_sprite(pygame.sprite.Sprite):
     def __init__(self):
         pygame.sprite.Sprite.__init__(self)
@@ -48,7 +47,7 @@ class contagem_sprite(pygame.sprite.Sprite):
 
 
 class personagem():
-    def __init__(self, player, x, y, virar, data, lista_sprites, animacao):
+    def __init__(self, player, x, y, virar, data, lista_sprites, animacao, som):
         self.player = player
         self.tamanho = data[0]
         self.escala_image = data[1]
@@ -66,8 +65,9 @@ class personagem():
         self.atacando = False
         self.ataque = 0
         self.tempo_ultimo_ataque = 0
+        self.som_ataque = som
         self.acerto = False
-        self.vida = 10
+        self.vida = 100
         self.vivo = True
         
     def personagem_sprite(self,lista_sprites,animacao):
@@ -82,7 +82,7 @@ class personagem():
             lista_animacao.append(temp_list_img)
         return lista_animacao
     
-    def move(self, largura_tela, altura_tela, surface, alvo):
+    def move(self, largura_tela, altura_tela, alvo, fim_de_round):
         VEL = 10
         pos_x_Player = 0
         pos_y_Player = 0
@@ -94,7 +94,7 @@ class personagem():
         key = pygame.key.get_pressed()
         
         #só acontece se não estiver atacando, sendo atacado ou defendendo
-        if self.atacando == False and self.vivo == True:
+        if self.atacando == False and self.vivo == True and fim_de_round == False:
             if self.player == 1:
                 #movimentação
                 if key[pygame.K_a]:
@@ -111,7 +111,7 @@ class personagem():
                     
                 #ataques
                 if key[pygame.K_h] or key[pygame.K_j] or key[pygame.K_k]:
-                    self.ataq(surface, alvo)
+                    self.ataq(alvo)
                     
                     #qual tipo de ataque
                     if key[pygame.K_h]:
@@ -137,7 +137,7 @@ class personagem():
                     
                 #ataques
                 if key[pygame.K_KP1] or key[pygame.K_KP2] or key[pygame.K_KP3]:
-                    self.ataq(surface, alvo)
+                    self.ataq(alvo)
                     
                     #qual tipo de ataque
                     if key[pygame.K_KP1]:
@@ -225,15 +225,15 @@ class personagem():
                         self.atacando = False
                         self.tempo_ultimo_ataque = 50
                     
-    def ataq(self, surface, alvo):
+    def ataq(self, alvo):
         if self.tempo_ultimo_ataque == 0:
             self.atacando = True
+            self.som_ataque.play()
             atacando_rect = pygame.Rect(self.rect.centerx - (2 * self.rect.width * self.virar), self.rect.y, 2 * self.rect.width, self.rect.height)
             if atacando_rect.colliderect(alvo.rect):
                 alvo.vida -= 10
                 alvo.acerto  = True
-                print("acerto")
-            pygame.draw.rect(surface, (0, 255, 0), atacando_rect)
+            
     
     def update_acao(self, nova_acao):
         #checar numero de sprites em cada animacao
@@ -243,5 +243,4 @@ class personagem():
             self.update_time = pygame.time.get_ticks()
     def desenhar(self, surface):
         img = pygame.transform.flip(self.image, self.virar, False)
-        pygame.draw.rect(surface, (255, 0, 0), self.rect)
         surface.blit(img, (self.rect.x - (self.offset[0] * self.escala_image), self.rect.y - (self.offset[1] * self.escala_image)))
